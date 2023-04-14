@@ -1,58 +1,73 @@
 <script setup lang="ts">
-import Home from './components/Home.vue'
-import Menu from './components/Menu.vue'
+import {
+  Setting,
+  House,
+  ChatSquare,
+  Plus
+} from '@element-plus/icons-vue'
 import { ref } from 'vue'
-const count = ref(0)
-const load = () => {
-  count.value += 2
+
+const isCollapse = ref(true)
+const handleOpen = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath)
 }
-const textarea1 = ref('')
-const textarea2 = ref('')
+const handleClose = (key: string, keyPath: string[]) => {
+  console.log(key, keyPath)
+}
+
 </script>
 
 <template>
   <div class="common-layout">
     <el-container>
       <el-aside width="auto">
-        <Menu></Menu>
+        <div @mouseenter="isCollapse = false" @mouseleave="isCollapse = true">
+          <el-menu default-active="2" class="el-menu-vertical-demo" :collapse="isCollapse" @open="handleOpen"
+            @close="handleClose">
+            <router-link to="/profile">
+              <el-menu-item index="1">
+                <el-icon>
+                  <House />
+                </el-icon>
+                <template #title>我的</template>
+              </el-menu-item>
+            </router-link>
+            <router-link to="/chatWindow">
+              <el-menu-item index="2">
+                <el-icon>
+                  <ChatSquare />
+                </el-icon>
+                <template #title>聊天室</template>
+              </el-menu-item>
+            </router-link>
+            <el-menu-item index="3" disabled>
+              <el-icon>
+                <Plus />
+              </el-icon>
+              <template #title>创建</template>
+            </el-menu-item>
+            <el-menu-item index="4">
+              <el-icon>
+                <setting />
+              </el-icon>
+              <template #title>设置</template>
+            </el-menu-item>
+          </el-menu>
+        </div>
       </el-aside>
       <el-container>
-        <el-header>Header</el-header>
+        <el-header></el-header>
         <el-main>
-          <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto">
-            <li v-for="i in count" :key="i" class="infinite-list-item">{{ i }}</li>
-          </ul>
-          <div style="margin: 20px 0" />
-          <el-input v-model="textarea2" :autosize="{ minRows: 2, maxRows: 4 }" type="textarea"
-            placeholder="Please input" />
+          <router-view></router-view>
         </el-main>
-        <el-footer>Footer</el-footer>
       </el-container>
     </el-container>
   </div>
-
-
 </template>
 
 <style scoped>
-.infinite-list {
-  height: 300px;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.infinite-list .infinite-list-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 50px;
-  background: var(--el-color-primary-light-9);
-  margin: 10px;
-  color: var(--el-color-primary);
-}
-
-.infinite-list .infinite-list-item+.list-item {
-  margin-top: 10px;
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 200px;
+  min-height: 400px;
 }
 </style>
